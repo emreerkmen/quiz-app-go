@@ -7,7 +7,11 @@ import (
 
 func main() {
 	fmt.Println("Quiz app started.")
-	fmt.Println("Get all quizzes.")
+	makeCuopleOfQuizzes()
+}
+
+
+func makeCuopleOfQuizzes(){
 	model.GetAllQuizzes()
 	//model.GetQuiz(1)
 	fmt.Println("Answer a quiz.")
