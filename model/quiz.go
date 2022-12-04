@@ -11,15 +11,15 @@ type Quiz struct {
 	ID          int
 	Name        string
 	Description string
-	questions   []Question
+	Questions   []*Question
 }
 
 type Question struct {
-	question string
-	choices  []string
+	Question string
+	Choices  []*string
 }
 
-type Questions []Question
+type Questions []*Question
 
 type QuizzesModels struct {
 	loggger hclog.Logger
@@ -44,7 +44,7 @@ func (quizzesModels QuizzesModels) GetAllQuizzes() []Quiz {
 
 func (quizzesModels QuizzesModels) GetQuiz(quizId int) Quiz {
 	quizModel := Quiz{}
-	questionsModel := []Question{}
+	questionsModel := []*Question{}
 
 	quiz, err := data.GetQuiz(quizId)
 
@@ -64,20 +64,20 @@ func (quizzesModels QuizzesModels) GetQuiz(quizId int) Quiz {
 
 	for _, question := range *questions {
 		questionModel := Question{
-			question: question.Question,
-			choices:  GetChoicesStringArrays(question.ID),
+			Question: question.Question,
+			Choices:  GetChoicesStringArrays(question.ID),
 		}
-		questionsModel = append(questionsModel, questionModel)
+		questionsModel = append(questionsModel, &questionModel)
 	}
 
-	quizModel.questions = questionsModel
+	quizModel.Questions = questionsModel
 
 	fmt.Println(quizModel)
 	return quizModel
 }
 
-func GetChoicesStringArrays(questionId int) []string {
-	questionChoices := []string{}
+func GetChoicesStringArrays(questionId int) []*string {
+	questionChoices := []*string{}
 
 	choices, err := data.GetQuestionChoices(questionId)
 
@@ -86,12 +86,12 @@ func GetChoicesStringArrays(questionId int) []string {
 	}
 
 	for _, choice := range *choices {
-		questionChoices = append(questionChoices, choice.Choice)
+		questionChoices = append(questionChoices, &choice.Choice)
 	}
 
 	return questionChoices
 }
 
-func (quiz *Quiz) GetQuestions() Questions {
-	return quiz.questions
+func (quiz *Quiz) GetQuestions() []*Question {
+	return quiz.Questions
 }
