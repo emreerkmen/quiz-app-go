@@ -54,7 +54,7 @@ type QuizResults []*QuizResult
 type users []*user
 
 type QuizzesDB struct {
-	loggger      hclog.Logger
+	loggger hclog.Logger
 }
 
 func NewQuizzesDB(logger hclog.Logger) *QuizzesDB {
@@ -114,25 +114,31 @@ var choicesList = choices{
 	&choice{ID: 5,
 		Choice:     "Call Of Duty",
 		questionID: 1},
-	&choice{ID: 5,
+	&choice{ID: 6,
 		Choice:     "Ankara",
 		questionID: 3},
-	&choice{ID: 1,
+	&choice{ID: 7,
+		Choice:     "İstanbul",
+		questionID: 3},
+	&choice{ID: 8,
+		Choice:     "İzmir",
+		questionID: 3},
+	&choice{ID: 9,
 		Choice:     "God Of War",
 		questionID: 4},
-	&choice{ID: 2,
+	&choice{ID: 10,
 		Choice:     "GTA 5",
 		questionID: 4},
-	&choice{ID: 3,
+	&choice{ID: 11,
 		Choice:     "NFS",
 		questionID: 5},
-	&choice{ID: 4,
+	&choice{ID: 12,
 		Choice:     "Mario",
 		questionID: 5},
-	&choice{ID: 5,
+	&choice{ID: 13,
 		Choice:     "Call Of Duty",
 		questionID: 6},
-	&choice{ID: 5,
+	&choice{ID: 14,
 		Choice:     "Ankara",
 		questionID: 6},
 }
@@ -141,19 +147,19 @@ var answersList = answers{
 	&Answer{ID: 1, quizResultID: 1,
 		questionID: 1, correctChoiceID: 1, selectedChoiceID: 1},
 	&Answer{ID: 2, quizResultID: 1,
-		questionID: 2, correctChoiceID: 1, selectedChoiceID: 2},
+		questionID: 2, correctChoiceID: 0, selectedChoiceID: 1},
 	&Answer{ID: 3, quizResultID: 1,
-		questionID: 2, correctChoiceID: 1, selectedChoiceID: 1},
-	&Answer{ID: 1, quizResultID: 2,
-		questionID: 1, correctChoiceID: 1, selectedChoiceID: 3},
-	&Answer{ID: 2, quizResultID: 2,
-		questionID: 2, correctChoiceID: 1, selectedChoiceID: 2},
-	&Answer{ID: 3, quizResultID: 2,
-		questionID: 2, correctChoiceID: 1, selectedChoiceID: 1},
+		questionID: 3, correctChoiceID: 0, selectedChoiceID: 1},
+	&Answer{ID: 4, quizResultID: 2,
+		questionID: 4, correctChoiceID: 1, selectedChoiceID: 1},
+	&Answer{ID: 5, quizResultID: 2,
+		questionID: 5, correctChoiceID: 1, selectedChoiceID: 2},
+	&Answer{ID: 6, quizResultID: 2,
+		questionID: 6, correctChoiceID: 1, selectedChoiceID: 1},
 }
 
 var quizResultsList = QuizResults{
-	&QuizResult{ID: 1, quizID: 1, userID: 1, totalCorrectAnswers: 2},
+	&QuizResult{ID: 1, quizID: 1, userID: 1, totalCorrectAnswers: 1},
 	&QuizResult{ID: 2, quizID: 1, userID: 1, totalCorrectAnswers: 1},
 }
 
@@ -348,9 +354,9 @@ func GetMaxQuizResultId() int {
 
 func CreateNewAnswer(quizResultID int, question *question, selectedChoiceID int) int {
 	id := GetMaxAnswersId() + 1
-	quizResult,err := GetQuizResultsByQuizResultID(quizResultID)
+	quizResult, err := GetQuizResultsByQuizResultID(quizResultID)
 
-	if err!= nil{
+	if err != nil {
 		fmt.Println(err)
 	}
 
