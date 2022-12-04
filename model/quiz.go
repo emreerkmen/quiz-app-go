@@ -3,13 +3,15 @@ package model
 import (
 	"fmt"
 	"quiz-app/quiz-api/data"
+
+	"github.com/hashicorp/go-hclog"
 )
 
 type Quiz struct {
-	ID int
-	Name  string
+	ID          int
+	Name        string
 	Description string
-	questions []Question
+	questions   []Question
 }
 
 type Question struct {
@@ -19,19 +21,28 @@ type Question struct {
 
 type Questions []Question
 
-func GetAllQuizzes() ([]Quiz){
+type QuizzesModels struct {
+	loggger hclog.Logger
+}
+
+func NewQuizzesModels(logger hclog.Logger) *QuizzesModels {
+	quizzesModel := QuizzesModels{loggger: logger}
+	return &quizzesModel
+}
+
+func (quizzesModels QuizzesModels) GetAllQuizzes() []Quiz {
 	quizzesModel := []Quiz{}
 	quizzes := data.GetAllQuizzes()
 
-	for _,quiz := range quizzes {
-		quizzesModel = append(quizzesModel, GetQuiz(quiz.ID))
+	for _, quiz := range quizzes {
+		quizzesModel = append(quizzesModel, quizzesModels.GetQuiz(quiz.ID))
 	}
 
 	fmt.Println(quizzesModel)
 	return quizzesModel
 }
 
-func GetQuiz(quizId int) (Quiz) {
+func (quizzesModels QuizzesModels) GetQuiz(quizId int) Quiz {
 	quizModel := Quiz{}
 	questionsModel := []Question{}
 
@@ -53,8 +64,8 @@ func GetQuiz(quizId int) (Quiz) {
 
 	for _, question := range *questions {
 		questionModel := Question{
-           question: question.Question,
-		   choices: GetChoicesStringArrays(question.ID),
+			question: question.Question,
+			choices:  GetChoicesStringArrays(question.ID),
 		}
 		questionsModel = append(questionsModel, questionModel)
 	}
@@ -65,23 +76,22 @@ func GetQuiz(quizId int) (Quiz) {
 	return quizModel
 }
 
-func GetChoicesStringArrays(questionId int) []string{
+func GetChoicesStringArrays(questionId int) []string {
 	questionChoices := []string{}
 
-	choices,err := data.GetQuestionChoices(questionId)
+	choices, err := data.GetQuestionChoices(questionId)
 
-	if err!=nil {
+	if err != nil {
 		fmt.Println(err)
 	}
 
 	for _, choice := range *choices {
-		questionChoices  = append(questionChoices, choice.Choice)
+		questionChoices = append(questionChoices, choice.Choice)
 	}
 
 	return questionChoices
 }
 
-func(quiz *Quiz) GetQuestions() Questions{
+func (quiz *Quiz) GetQuestions() Questions {
 	return quiz.questions
 }
-
