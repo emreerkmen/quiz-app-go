@@ -1,6 +1,10 @@
 package data
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/hashicorp/go-hclog"
+)
 
 type quiz struct {
 	ID          int
@@ -49,7 +53,16 @@ type answers []*Answer
 type QuizResults []*QuizResult
 type users []*user
 
-var quizzesDB = quizzes{
+type QuizzesDB struct {
+	loggger      hclog.Logger
+}
+
+func NewQuizzesDB(logger hclog.Logger) *QuizzesDB {
+	pb := &QuizzesDB{logger}
+	return pb
+}
+
+var quizzesList = quizzes{
 	&quiz{ID: 1,
 		Name:        "General Quiz",
 		Description: "This is a general quiz. You can find questions from any topic."},
@@ -58,7 +71,7 @@ var quizzesDB = quizzes{
 		Description: "This quiz has questions that specific to video games."},
 }
 
-var questionsDB = questions{
+var questionsList = questions{
 	&question{ID: 1,
 		Question:        "What is the best game in the world?",
 		correctChoiceID: 1,
@@ -85,7 +98,7 @@ var questionsDB = questions{
 		quizID:          2},
 }
 
-var choicesDB = choices{
+var choicesList = choices{
 	&choice{ID: 1,
 		Choice:     "God Of War",
 		questionID: 1},
@@ -124,7 +137,7 @@ var choicesDB = choices{
 		questionID: 6},
 }
 
-var answersDB = answers{
+var answersList = answers{
 	&Answer{ID: 1, quizResultID: 1,
 		questionID: 1, correctChoiceID: 1, selectedChoiceID: 1},
 	&Answer{ID: 2, quizResultID: 1,
@@ -139,23 +152,23 @@ var answersDB = answers{
 		questionID: 2, correctChoiceID: 1, selectedChoiceID: 1},
 }
 
-var quizResultsDB = QuizResults{
+var quizResultsList = QuizResults{
 	&QuizResult{ID: 1, quizID: 1, userID: 1, totalCorrectAnswers: 2},
 	&QuizResult{ID: 2, quizID: 1, userID: 1, totalCorrectAnswers: 1},
 }
 
-var usersDB = users{
+var usersList = users{
 	&user{ID: 1,
 		userName: "Emre"},
 }
 
 func GetAllQuizzes() quizzes {
-	return quizzesDB
+	return quizzesList
 }
 
 func GetQuiz(id int) (*quiz, error) {
 
-	for _, quiz := range quizzesDB {
+	for _, quiz := range quizzesList {
 		if quiz.ID == id {
 			return quiz, nil
 		}
@@ -165,14 +178,14 @@ func GetQuiz(id int) (*quiz, error) {
 }
 
 func GetAllQuestions() questions {
-	return questionsDB
+	return questionsList
 }
 
 func GetQuizQuestions(quizId int) (*questions, error) {
 
 	quizQuestions := questions{}
 
-	for _, question := range questionsDB {
+	for _, question := range questionsList {
 		if question.quizID == quizId {
 			quizQuestions = append(quizQuestions, question)
 		}
@@ -186,14 +199,14 @@ func GetQuizQuestions(quizId int) (*questions, error) {
 }
 
 func GetAllChoices() choices {
-	return choicesDB
+	return choicesList
 }
 
 func GetQuestionChoices(questionId int) (*choices, error) {
 
 	questionChoices := choices{}
 
-	for _, choice := range choicesDB {
+	for _, choice := range choicesList {
 		if choice.questionID == questionId {
 			questionChoices = append(questionChoices, choice)
 		}
@@ -207,12 +220,12 @@ func GetQuestionChoices(questionId int) (*choices, error) {
 }
 
 func GetAllAnswers() answers {
-	return answersDB
+	return answersList
 }
 
 func GetAnswer(answerId int) (*Answer, error) {
 
-	for _, answer := range answersDB {
+	for _, answer := range answersList {
 		if answer.ID == answerId {
 			return answer, nil
 		}
@@ -222,7 +235,7 @@ func GetAnswer(answerId int) (*Answer, error) {
 }
 
 func GetAllUsers() users {
-	return usersDB
+	return usersList
 }
 
 func (quiz quiz) String() string {
@@ -312,7 +325,7 @@ func (err *ErrorAnswersNotFound) Error() string {
 func GetMaxAnswersId() int {
 	maxId := 0
 
-	for _, answer := range answersDB {
+	for _, answer := range answersList {
 		if answer.ID > maxId {
 			maxId = answer.ID
 		}
@@ -324,7 +337,7 @@ func GetMaxAnswersId() int {
 func GetMaxQuizResultId() int {
 	maxId := 0
 
-	for _, quizResult := range quizResultsDB {
+	for _, quizResult := range quizResultsList {
 		if quizResult.ID > maxId {
 			maxId = quizResult.ID
 		}
@@ -355,7 +368,7 @@ func CreateNewAnswer(quizResultID int, question *question, selectedChoiceID int)
 		correctChoiceID:  question.correctChoiceID,
 		selectedChoiceID: selectedChoiceID,
 		result:           result}
-	answersDB = append(answersDB, &newAnswer)
+	answersList = append(answersList, &newAnswer)
 
 	return id
 }
@@ -367,13 +380,13 @@ func CreateNewQuizResult(quizID int, userID int) QuizResult {
 		quizID:              quizID,
 		userID:              userID,
 		totalCorrectAnswers: 0}
-	quizResultsDB = append(quizResultsDB, &newQuizResult)
+	quizResultsList = append(quizResultsList, &newQuizResult)
 
 	return newQuizResult
 }
 
 func GetUser(userId int) (*user, error) {
-	for _, user := range usersDB {
+	for _, user := range usersList {
 		if userId == user.ID {
 			return user, nil
 		}
@@ -392,7 +405,7 @@ func (question *question) GetCorrectAnswer() int {
 
 func GetCorrectChoiceByQuestionID(questionID int) (int, error) {
 
-	for _, question := range questionsDB {
+	for _, question := range questionsList {
 		if question.ID == questionID {
 			return question.correctChoiceID, nil
 		}
@@ -403,7 +416,7 @@ func GetCorrectChoiceByQuestionID(questionID int) (int, error) {
 
 func GetQuizByID(quizID int) (*quiz, error) {
 
-	for _, quiz := range quizzesDB {
+	for _, quiz := range quizzesList {
 		if quiz.ID == quizID {
 			return quiz, nil
 		}
@@ -415,7 +428,7 @@ func GetQuizByID(quizID int) (*quiz, error) {
 func GetQuestionByQuizID(quizID int) (*questions, error) {
 
 	questions := questions{}
-	for _, question := range questionsDB {
+	for _, question := range questionsList {
 		if question.quizID == quizID {
 			questions = append(questions, question)
 		}
@@ -430,7 +443,7 @@ func GetQuestionByQuizID(quizID int) (*questions, error) {
 
 func GetQuizResultsByQuizResultID(quizResultID int) (*QuizResult, error) {
 
-	for _, quizResult := range quizResultsDB {
+	for _, quizResult := range quizResultsList {
 		if quizResult.ID == quizResultID {
 			return quizResult, nil
 		}
@@ -453,7 +466,7 @@ func (quizResult *QuizResult) GetTotalCorrectAnswers() int {
 
 func (quizResult *QuizResult) GetAnswers() (*answers, error) {
 	answers := answers{}
-	for _, answer := range answersDB {
+	for _, answer := range answersList {
 		if answer.quizResultID == quizResult.ID {
 			answers = append(answers, answer)
 		}
@@ -479,7 +492,7 @@ func (answer *Answer) GetResult() int {
 }
 
 func GetAllQuizResults() *QuizResults {
-	return &quizResultsDB
+	return &quizResultsList
 }
 
 func (quizResult *QuizResult) UpdateTotalCorrectAnswer() {
