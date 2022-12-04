@@ -58,8 +58,8 @@ type QuizzesDB struct {
 }
 
 func NewQuizzesDB(logger hclog.Logger) *QuizzesDB {
-	pb := &QuizzesDB{logger}
-	return pb
+	quizzesDB := &QuizzesDB{logger}
+	return quizzesDB
 }
 
 var quizzesList = quizzes{
