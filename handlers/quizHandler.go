@@ -1,4 +1,4 @@
-package handler
+package handlers
 
 import (
 	"quiz-app/quiz-api/data"
@@ -10,7 +10,7 @@ import (
 type QuizHandler struct {
 	logger         hclog.Logger
 	validation     *data.Validation
-	productDB      *data.QuizzesDB
+	quizzesDB      *data.QuizzesDB
 }
 
 // NewQuizHandler returns a new quiz handler with the given logger
