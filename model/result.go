@@ -3,6 +3,8 @@ package model
 import (
 	"fmt"
 	"quiz-app/quiz-api/data"
+
+	"github.com/hashicorp/go-hclog"
 )
 
 type Result struct {
@@ -23,16 +25,37 @@ type QuestionAndAnswer struct {
 
 type QuestionAndAnswers []*QuestionAndAnswer
 
-func GetResult(quizResultID int) Result {
+type QuizResultModels struct {
+	loggger hclog.Logger
+}
+
+func NewQuizResultModels(logger hclog.Logger) *QuizResultModels {
+	quizResultModels := QuizResultModels{loggger: logger}
+	return &quizResultModels
+}
+
+func (quizResultModesl QuizResultModels) GetAllResults() []Result {
+	resultModels := []Result{}
+	results := data.GetAllQuizResults()
+
+	for _, result := range *results {
+		resultModels = append(resultModels, quizResultModesl.GetResult(result.ID))
+	}
+
+	fmt.Println(resultModels)
+	return resultModels
+}
+
+func(quizResultModesl QuizResultModels) GetResult(quizResultID int) Result {
 	result := Result{}
-	fmt.Println("1")
+
 	quizResult, err := data.GetQuizResultsByQuizResultID(quizResultID)
 	fmt.Print("Quiz Result:  ")
 	fmt.Println(quizResult)
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println("2")
+
 	result.QuizId = quizResult.GetQuizID()
 	quiz, err := data.GetQuizByID(result.QuizId)
 	if err != nil {
@@ -76,13 +99,15 @@ func GetResult(quizResultID int) Result {
 		correctChoiceID := (*answers)[index].GetCorrectChoiceID()
 		selectedChoiceID := (*answers)[index].GetSelectedChoiceID()
 
+		fmt.Printf("correctChoiceID : %v\n", correctChoiceID)
+		fmt.Printf("selectedChoiceID : %v\n", selectedChoiceID)
+		fmt.Printf("Choices: %v\n", (*choices))
+
 		var selectedAnswer string
 		if selectedChoiceID != -1 {
 			selectedAnswer = (*choices)[selectedChoiceID].Choice
 		}
 		correctAnswer := (*choices)[correctChoiceID].Choice
-
-		fmt.Printf("Choices id: %v\n", (*choices))
 
 		questionAndAnswer := QuestionAndAnswer{Question: questionText,
 			SelectedAnswer: selectedAnswer,
