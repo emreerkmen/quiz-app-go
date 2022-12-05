@@ -38,9 +38,10 @@ func (quizHandler *QuizHandler) AnswerQuiz(rw http.ResponseWriter, r *http.Reque
 	}
 
 	err = data.ToJSON(quizResultID, rw)
+	quizHandler.logger.Debug("","quizResultID", quizResultID)
 	if err != nil {
-		// we should never be here but log the error just incase
-		quizHandler.logger.Error("Unable to serializing product", "error", err)
+		quizHandler.logger.Error("Unable to serializing quiz result", "error", err)
+		return
 	}
 
 }
