@@ -502,9 +502,5 @@ func GetAllQuizResults() *QuizResults {
 }
 
 func (quizResult *QuizResult) UpdateTotalCorrectAnswer() {
-	fmt.Println("before quizResult.totalCorrectAnswers: ")
-	fmt.Println(quizResult.totalCorrectAnswers)
 	quizResult.totalCorrectAnswers++
-	fmt.Println("after quizResult.totalCorrectAnswers: ")
-	fmt.Println(quizResult.totalCorrectAnswers)
 }
