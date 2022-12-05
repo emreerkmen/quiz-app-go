@@ -12,7 +12,7 @@ type quiz struct {
 	Description string
 }
 
-type question struct {
+type Question struct {
 	ID              int
 	Question        string
 	correctChoiceID int
@@ -47,7 +47,7 @@ type user struct {
 }
 
 type quizzes []*quiz
-type questions []*question
+type Questions []*Question
 type choices []*choice
 type answers []*Answer
 type QuizResults []*QuizResult
@@ -71,28 +71,28 @@ var quizzesList = quizzes{
 		Description: "This quiz has questions that specific to video games."},
 }
 
-var questionsList = questions{
-	&question{ID: 1,
+var questionsList = Questions{
+	&Question{ID: 1,
 		Question:        "What is the best game in the world?",
 		correctChoiceID: 1,
 		quizID:          1},
-	&question{ID: 2,
+	&Question{ID: 2,
 		Question:        "What is the capital of Malta",
 		correctChoiceID: 0,
 		quizID:          1},
-	&question{ID: 3,
+	&Question{ID: 3,
 		Question:        "What is the capital of Turkey",
 		correctChoiceID: 0,
 		quizID:          1},
-	&question{ID: 4,
+	&Question{ID: 4,
 		Question:        "Test What is the best game in the world?",
 		correctChoiceID: 1,
 		quizID:          2},
-	&question{ID: 5,
+	&Question{ID: 5,
 		Question:        "Test What is the capital of Malta",
 		correctChoiceID: 1,
 		quizID:          2},
-	&question{ID: 6,
+	&Question{ID: 6,
 		Question:        "Test What is the capital of Turkey",
 		correctChoiceID: 1,
 		quizID:          2},
@@ -183,13 +183,13 @@ func GetQuiz(id int) (*quiz, error) {
 	return nil, &ErrorQuizNotFound{id}
 }
 
-func GetAllQuestions() questions {
+func GetAllQuestions() Questions {
 	return questionsList
 }
 
-func GetQuizQuestions(quizId int) (*questions, error) {
+func GetQuizQuestions(quizId int) (*Questions, error) {
 
-	quizQuestions := questions{}
+	quizQuestions := Questions{}
 
 	for _, question := range questionsList {
 		if question.quizID == quizId {
@@ -248,7 +248,7 @@ func (quiz quiz) String() string {
 	return fmt.Sprintf("{%v %v}", quiz.ID, quiz.Name)
 }
 
-func (question question) String() string {
+func (question Question) String() string {
 	return fmt.Sprintf("{%v %v %v %v}", question.ID, question.Question, question.correctChoiceID, question.quizID)
 }
 
@@ -352,7 +352,7 @@ func GetMaxQuizResultId() int {
 	return maxId
 }
 
-func CreateNewAnswer(quizResultID int, question *question, selectedChoiceID int) int {
+func CreateNewAnswer(quizResultID int, question *Question, selectedChoiceID int) int {
 	id := GetMaxAnswersId() + 1
 	quizResult, err := GetQuizResultsByQuizResultID(quizResultID)
 
@@ -405,7 +405,7 @@ func (user *user) GetUserName() string {
 	return user.userName
 }
 
-func (question *question) GetCorrectAnswer() int {
+func (question *Question) GetCorrectAnswer() int {
 	return question.correctChoiceID
 }
 
@@ -431,9 +431,9 @@ func GetQuizByID(quizID int) (*quiz, error) {
 	return nil, &ErrorQuizNotFound{quizID}
 }
 
-func GetQuestionByQuizID(quizID int) (*questions, error) {
+func GetQuestionByQuizID(quizID int) (*Questions, error) {
 
-	questions := questions{}
+	questions := Questions{}
 	for _, question := range questionsList {
 		if question.quizID == quizID {
 			questions = append(questions, question)
