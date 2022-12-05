@@ -1,7 +1,6 @@
 package model
 
 import (
-	"fmt"
 	"quiz-app/quiz-api/data"
 
 	"github.com/hashicorp/go-hclog"
@@ -30,26 +29,30 @@ func NewQuizzesModels(logger hclog.Logger) *QuizzesModels {
 	return &quizzesModel
 }
 
-func (quizzesModels QuizzesModels) GetAllQuizzes() []Quiz {
+func (quizzesModels QuizzesModels) GetAllQuizzes() ([]Quiz,error) {
 	quizzesModel := []Quiz{}
 	quizzes := data.GetAllQuizzes()
 
 	for _, quiz := range quizzes {
-		quizzesModel = append(quizzesModel, quizzesModels.GetQuiz(quiz.ID))
+		quizModel,err := quizzesModels.GetQuiz(quiz.ID)
+
+		if err != nil {
+			return nil,&ErrorGeneric{err}
+		}
+		quizzesModel = append(quizzesModel, *quizModel)
 	}
 
-	fmt.Println(quizzesModel)
-	return quizzesModel
+	return quizzesModel,nil
 }
 
-func (quizzesModels QuizzesModels) GetQuiz(quizId int) Quiz {
+func (quizzesModels QuizzesModels) GetQuiz(quizId int) (*Quiz,error) {
 	quizModel := Quiz{}
 	questionsModel := []*Question{}
 
 	quiz, err := data.GetQuiz(quizId)
 
 	if err != nil {
-		fmt.Println(err)
+		return nil,&ErrorGeneric{err}
 	}
 
 	quizModel.ID = quiz.ID
@@ -59,37 +62,42 @@ func (quizzesModels QuizzesModels) GetQuiz(quizId int) Quiz {
 	questions, err := data.GetQuizQuestions(quizId)
 
 	if err != nil {
-		fmt.Println(err)
+		return nil,&ErrorGeneric{err}
 	}
 
 	for _, question := range *questions {
+		choices,err:=GetChoicesStringArrays(question.ID)
+
+		if err != nil {
+			return nil,&ErrorGeneric{err}
+		}
+
 		questionModel := Question{
 			Question: question.Question,
-			Choices:  GetChoicesStringArrays(question.ID),
+			Choices:  choices,
 		}
 		questionsModel = append(questionsModel, &questionModel)
 	}
 
 	quizModel.Questions = questionsModel
 
-	fmt.Println(quizModel)
-	return quizModel
+	return &quizModel,nil
 }
 
-func GetChoicesStringArrays(questionId int) []*string {
+func GetChoicesStringArrays(questionId int) ([]*string,error) {
 	questionChoices := []*string{}
 
 	choices, err := data.GetQuestionChoices(questionId)
 
 	if err != nil {
-		fmt.Println(err)
+		return nil,&ErrorGeneric{err}
 	}
 
 	for _, choice := range *choices {
 		questionChoices = append(questionChoices, &choice.Choice)
 	}
 
-	return questionChoices
+	return questionChoices,nil
 }
 
 func (quiz *Quiz) GetQuestions() []*Question {

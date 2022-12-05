@@ -10,9 +10,14 @@ func (quizHandler *QuizHandler) GetAllQuizResults(rw http.ResponseWriter, r *htt
 	quizHandler.logger.Debug("Get all records")
 	rw.Header().Add("Content-Type", "application/json")
 
-	quizResults := quizHandler.quizResultModels.GetAllResults()
+	quizResults,err := quizHandler.quizResultModels.GetAllResults()
 
-	err := data.ToJSON(quizResults, rw)
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = data.ToJSON(quizResults, rw)
 	if err != nil {
 		// we should never be here but log the error just incase
 		quizHandler.logger.Error("Unable to serializing quizzes", "error", err)

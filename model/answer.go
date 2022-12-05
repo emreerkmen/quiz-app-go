@@ -3,44 +3,60 @@ package model
 import (
 	"fmt"
 	"quiz-app/quiz-api/data"
+
+	"github.com/hashicorp/go-hclog"
 )
 
-func AnswerQuiz(quizId int, userId int, selectedChoices []int) (int, error) {
-	quiz, err := data.GetQuizByID(quizId)
+//1, 1, []int{1, 1, 0}
+type Answer struct {
+	QuizID int
+	UserID int
+	SelectedChoices []int
+}
+
+type AnswerModels struct {
+	logger hclog.Logger
+}
+
+func NewAnswerModels(logger hclog.Logger) *AnswerModels {
+	answerModels := AnswerModels{logger: logger}
+	return &answerModels
+}
+
+func(answerModel AnswerModels) AnswerQuiz(answer *Answer) (int, error) {
+	quiz, err := data.GetQuizByID(answer.QuizID)
 
 	if err != nil {
-		fmt.Printf("Error when answering: %v", err)
+		return 0,&ErrorGeneric{err}
 	}
 
-	fmt.Print("User id: ")
-	fmt.Println(userId)
-	_, err = data.GetUser(userId)
+	_, err = data.GetUser(answer.UserID)
 
 	if err != nil {
-		fmt.Printf("Error when answering: %v", err)
+		return 0,&ErrorGeneric{err}
 	}
 
 	questions, err := data.GetQuestionByQuizID(quiz.ID)
 
 	if err != nil {
-		fmt.Printf("Error when answering: %v", err)
+		return 0,&ErrorGeneric{err}
 	}
 
-	answerLength := len(selectedChoices)
+	answerLength := len(answer.SelectedChoices)
 	questionLength := len(*questions)
 
 	if answerLength != questionLength {
 		return 0, &ErrorAnswering{questionLength, answerLength}
 	}
 
-	quizResult := data.CreateNewQuizResult(quizId, userId)
+	quizResult := data.CreateNewQuizResult(answer.QuizID, answer.UserID)
 
-	for index, selectedChoice := range selectedChoices {
+	for index, selectedChoice := range answer.SelectedChoices {
 		question := (*questions)[index]
 		//choices length kontrolü yap
 		choices, err := data.GetQuestionChoices(question.ID)
 		if err != nil {
-			fmt.Println(err)
+			return 0,&ErrorGeneric{err}
 		}
 		choicesLength := len(*choices)
 		if selectedChoice+1 > choicesLength {
@@ -48,9 +64,6 @@ func AnswerQuiz(quizId int, userId int, selectedChoices []int) (int, error) {
 		}
 		data.CreateNewAnswer(quizResult.ID, question, selectedChoice)
 	}
-
-	answers := data.GetAllAnswers()
-	fmt.Println(answers)
 
 	return quizResult.ID, nil
 }
