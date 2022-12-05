@@ -20,25 +20,32 @@ import (
 func main() {
 	fmt.Println("Quiz app started.")
 
-	//Create Server
-	logger := hclog.Default()
+	logger := hclog.New(&hclog.LoggerOptions{
+		Name:  "quiz-app",
+		Level: hclog.LevelFromString("DEBUG"),
+	})
 	validation := data.NewValidation()
 
 	// create quiz models instance
 	quizModel := model.NewQuizzesModels(logger)
 	quizResultModels := model.NewQuizResultModels(logger)
-	makeCuopleOfQuizzes(*quizModel,*quizResultModels)
+	answertModels := model.NewAnswerModels(logger)
+	makeCuopleOfQuizzes(logger,*quizModel, *quizResultModels, *answertModels)
 
 	// create the handlers
-	quizHandler := handlers.NewQuizHandler(logger, validation, quizModel, quizResultModels)
+	quizHandler := handlers.NewQuizHandler(logger, validation, quizModel, quizResultModels, answertModels)
 
 	// create a new router and register the handlers
 	serverMux := mux.NewRouter()
 
-	// handlers for API
+	// Subrouter for get routers
 	getRouter := serverMux.Methods(http.MethodGet).Subrouter()
 	getRouter.HandleFunc("/quizzes", quizHandler.GetAllQuizzes)
 	getRouter.HandleFunc("/quizResults", quizHandler.GetAllQuizResults)
+
+	// Subrouter for get routers
+	postRouter := serverMux.Methods(http.MethodPost).Subrouter()
+	postRouter.HandleFunc("/answer", quizHandler.AnswerQuiz)
 
 	// CORS
 	ch := gohandlers.CORS(gohandlers.AllowedOrigins([]string{"*"}))
@@ -81,61 +88,32 @@ func main() {
 	log.Println("Server exiting")
 }
 
-func makeCuopleOfQuizzes(quizModels model.QuizzesModels, quizResultModels model.QuizResultModels) {
-	quizModels.GetAllQuizzes()
-	//model.GetQuiz(1)
-	fmt.Println("Answer a quiz.")
-	quizResultID, err := model.AnswerQuiz(1, 1, []int{1, 1, -1})
-	fmt.Printf("quizResultID : %v\n", quizResultID)
-	if err != nil {
-		fmt.Println(err)
+func makeCuopleOfQuizzes(logger hclog.Logger,quizModels model.QuizzesModels, quizResultModels model.QuizResultModels, answerModel model.AnswerModels) {
+	exampleAnswers := []*model.Answer{
+		{QuizID: 1,
+			UserID:          1,
+			SelectedChoices: []int{1, 1, -1}},
+		{QuizID: 1,
+			UserID:          1,
+			SelectedChoices: []int{-1, -1, -1}},
+		{QuizID: 1,
+			UserID:          1,
+			SelectedChoices: []int{1, 0, 0}},
+		{QuizID: 1,
+			UserID:          1,
+			SelectedChoices: []int{1, 1, 0}},
+		{QuizID: 1,
+			UserID:          1,
+			SelectedChoices: []int{1, 1, 0}},
 	}
 
-	fmt.Println("Get a quiz result")
-	quizResultModels.GetResult(quizResultID)
+	for _, a := range exampleAnswers {
+		quizResultID, err := answerModel.AnswerQuiz(a)
 
-	quizResultID, err = model.AnswerQuiz(2, 1, []int{-1, -1, -1})
-	fmt.Printf("quizResultID : %v\n", quizResultID)
-	if err != nil {
-		fmt.Println(err)
+		if err != nil {
+			logger.Error("Quiz result error", "quizResultID", quizResultID, "err", err)
+		}
+		
+		quizResultModels.GetResult(quizResultID)
 	}
-
-	fmt.Println("Get a quiz result")
-	quizResultModels.GetResult(quizResultID)
-
-	quizResultID, err = model.AnswerQuiz(1, 1, []int{1, 0, 0})
-	fmt.Printf("quizResultID : %v\n", quizResultID)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	fmt.Println("Get a quiz result")
-	quizResultModels.GetResult(quizResultID)
-
-	quizResultID, err = model.AnswerQuiz(1, 1, []int{1, 1, 0})
-	fmt.Printf("quizResultID : %v\n", quizResultID)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	fmt.Println("Get a quiz result")
-	quizResultModels.GetResult(quizResultID)
-
-	quizResultID, err = model.AnswerQuiz(1, 1, []int{1, 1, 0})
-	fmt.Printf("quizResultID : %v\n", quizResultID)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	fmt.Println("Get a quiz result")
-	quizResultModels.GetResult(quizResultID)
-
-	quizResultID, err = model.AnswerQuiz(1, 1, []int{1, 1, 0})
-	fmt.Printf("quizResultID : %v\n", quizResultID)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	fmt.Println("Get a quiz result")
-	quizResultModels.GetResult(quizResultID)
 }
