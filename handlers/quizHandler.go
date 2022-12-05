@@ -13,9 +13,10 @@ type QuizHandler struct {
 	validation       *data.Validation
 	quizzesModels    *model.QuizzesModels
 	quizResultModels *model.QuizResultModels
+	answerModels     *model.AnswerModels
 }
 
 // NewQuizHandler returns a new quiz handler with the given logger
-func NewQuizHandler(logger hclog.Logger, validation *data.Validation, quizzesModels *model.QuizzesModels, quizResultModels *model.QuizResultModels) *QuizHandler {
-	return &QuizHandler{logger, validation, quizzesModels, quizResultModels}
+func NewQuizHandler(logger hclog.Logger, validation *data.Validation, quizzesModels *model.QuizzesModels, quizResultModels *model.QuizResultModels, answerModel *model.AnswerModels) *QuizHandler {
+	return &QuizHandler{logger, validation, quizzesModels, quizResultModels, answerModel}
 }
