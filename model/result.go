@@ -26,11 +26,11 @@ type QuestionAndAnswer struct {
 type QuestionAndAnswers []*QuestionAndAnswer
 
 type QuizResultModels struct {
-	loggger hclog.Logger
+	logger hclog.Logger
 }
 
 func NewQuizResultModels(logger hclog.Logger) *QuizResultModels {
-	quizResultModels := QuizResultModels{loggger: logger}
+	quizResultModels := QuizResultModels{logger: logger}
 	return &quizResultModels
 }
 
