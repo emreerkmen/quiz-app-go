@@ -11,7 +11,7 @@ import (
 type Answer struct {
 	QuizID          int   `json:"quizID" validate:"required"`
 	UserID          int   `json:"userID" validate:"required"`
-	SelectedChoices []int `json:"selectedChoices" validate:"required"`
+	SelectedChoices []int `json:"selectedChoices" validate:"required,dive,min=-1"`
 }
 
 type AnswerModels struct {
