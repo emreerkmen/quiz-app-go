@@ -9,9 +9,9 @@ import (
 
 // 1, 1, []int{1, 1, 0}
 type Answer struct {
-	QuizID          int
-	UserID          int
-	SelectedChoices []int
+	QuizID          int   `json:"quizID"`
+	UserID          int   `json:"userID"`
+	SelectedChoices []int `json:"selectedChoices"`
 }
 
 type AnswerModels struct {
@@ -68,7 +68,7 @@ func (answerModel AnswerModels) AnswerQuiz(answer *Answer) (int, error) {
 
 		//Todo: validation ile bunu yap ve sil
 		if selectedChoice < -1 {
-			return 0, &ErrorUnExpectedChoice{questionID: question.ID, choiceLenght: choicesLength, selectedChoice: selectedChoice-1}
+			return 0, &ErrorUnExpectedChoice{questionID: question.ID, choiceLenght: choicesLength, selectedChoice: selectedChoice - 1}
 		}
 
 		if selectedChoice+1 > choicesLength {
@@ -76,16 +76,16 @@ func (answerModel AnswerModels) AnswerQuiz(answer *Answer) (int, error) {
 		}
 
 		answerData := answerData{
-			question: question,
+			question:       question,
 			selectedChoice: selectedChoice,
 		}
 
-		answersDatas=append(answersDatas, answerData)
+		answersDatas = append(answersDatas, answerData)
 	}
 
 	quizResult := data.CreateNewQuizResult(answer.QuizID, answer.UserID)
 
-	for _,answerData := range answersDatas{
+	for _, answerData := range answersDatas {
 		data.CreateNewAnswer(quizResult.ID, answerData.question, answerData.selectedChoice)
 	}
 
@@ -110,4 +110,3 @@ type ErrorUnExpectedChoice struct {
 func (err *ErrorUnExpectedChoice) Error() string {
 	return fmt.Sprintf("Selected a choise that does not eixst. Question ID: %v, Choice Length: %v, Selected Choice: %v", err.questionID, err.choiceLenght, err.selectedChoice+1)
 }
-

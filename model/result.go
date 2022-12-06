@@ -8,19 +8,19 @@ import (
 )
 
 type Result struct {
-	QuizId              int
-	QuizName            string
-	UserName            string
-	QuestionAndAnswers  []*QuestionAndAnswer
-	TotalCorrectAnswers int
-	Status              int
+	QuizId              int                  `json:"quizID"`
+	QuizName            string               `json:"quizName"`
+	UserName            string               `json:"userName"`
+	QuestionAndAnswers  []*QuestionAndAnswer `json:"questionAndAnswers"`
+	TotalCorrectAnswers int                  `json:"totalCorrectAnswers"`
+	Status              int                  `json:"status"`
 }
 
 type QuestionAndAnswer struct {
-	Question       string
-	SelectedAnswer string
-	CorrectAnswer  string
-	Result         string
+	Question       string `json:"question"`
+	SelectedAnswer string `json:"selectedAnswer"`
+	CorrectAnswer  string `json:"correctAnswer"`
+	Result         string `json:"result"`
 }
 
 type QuestionAndAnswers []*QuestionAndAnswer
@@ -34,22 +34,22 @@ func NewQuizResultModels(logger hclog.Logger) *QuizResultModels {
 	return &quizResultModels
 }
 
-func (quizResultModesl QuizResultModels) GetAllResults() ([]Result,error) {
+func (quizResultModesl QuizResultModels) GetAllResults() ([]Result, error) {
 	resultModels := []Result{}
 	results := data.GetAllQuizResults()
 
 	for _, result := range *results {
-		quizResult,err :=quizResultModesl.GetResult(result.ID)
-		if err!=nil {
-			return nil,&ErrorGeneric{err}
+		quizResult, err := quizResultModesl.GetResult(result.ID)
+		if err != nil {
+			return nil, &ErrorGeneric{err}
 		}
 		resultModels = append(resultModels, *quizResult)
 	}
 
-	return resultModels,nil
+	return resultModels, nil
 }
 
-func(quizResultModesl QuizResultModels) GetResult(quizResultID int) (*Result,error) {
+func (quizResultModesl QuizResultModels) GetResult(quizResultID int) (*Result, error) {
 	result := Result{}
 
 	quizResult, err := data.GetQuizResultsByQuizResultID(quizResultID)
@@ -67,10 +67,10 @@ func(quizResultModesl QuizResultModels) GetResult(quizResultID int) (*Result,err
 	result.QuizName = quiz.Name
 
 	user, err := data.GetUser(quizResult.GetUserID())
-	
+
 	if err != nil {
-		quizResultModesl.logger.Error("Error","err",err)
-		return nil,&ErrorQuizResult{message: err}
+		quizResultModesl.logger.Error("Error", "err", err)
+		return nil, &ErrorQuizResult{message: err}
 	}
 
 	result.UserName = user.GetUserName()
@@ -124,7 +124,7 @@ func(quizResultModesl QuizResultModels) GetResult(quizResultID int) (*Result,err
 	result.TotalCorrectAnswers = quizResult.GetTotalCorrectAnswers()
 	result.Status = CalculateStatus(quizResult.GetTotalCorrectAnswers(), quizResultID)
 
-	return &result,nil
+	return &result, nil
 }
 
 func (queAndAns QuestionAndAnswer) String() string {
@@ -136,7 +136,7 @@ func CalculateStatus(currentTotalCorrectAnswer int, quizResultID int) int {
 	worstQuizResultsAmount := 0.0
 
 	for _, quizResult := range *quizResults {
-		if quizResult.GetTotalCorrectAnswers() < currentTotalCorrectAnswer && quizResultID!=quizResult.ID {
+		if quizResult.GetTotalCorrectAnswers() < currentTotalCorrectAnswer && quizResultID != quizResult.ID {
 			worstQuizResultsAmount++
 		}
 	}
@@ -145,7 +145,7 @@ func CalculateStatus(currentTotalCorrectAnswer int, quizResultID int) int {
 		return 0
 	}
 
-	return int(worstQuizResultsAmount/float64((len(*quizResults) - 1)) * 100)
+	return int(worstQuizResultsAmount / float64((len(*quizResults) - 1)) * 100)
 }
 
 type ErrorQuizResult struct {

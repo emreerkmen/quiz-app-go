@@ -7,15 +7,15 @@ import (
 )
 
 type Quiz struct {
-	ID          int
-	Name        string
-	Description string
-	Questions   []*Question
+	ID          int         `json:"ID"`
+	Name        string      `json:"name"`
+	Description string      `json:"description"`
+	Questions   []*Question `json:"questions"`
 }
 
 type Question struct {
-	Question string
-	Choices  []*string
+	Question string    `json:"question"`
+	Choices  []*string `json:"choices"`
 }
 
 type Questions []*Question
@@ -29,30 +29,30 @@ func NewQuizzesModels(logger hclog.Logger) *QuizzesModels {
 	return &quizzesModel
 }
 
-func (quizzesModels QuizzesModels) GetAllQuizzes() ([]Quiz,error) {
+func (quizzesModels QuizzesModels) GetAllQuizzes() ([]Quiz, error) {
 	quizzesModel := []Quiz{}
 	quizzes := data.GetAllQuizzes()
 
 	for _, quiz := range quizzes {
-		quizModel,err := quizzesModels.GetQuiz(quiz.ID)
+		quizModel, err := quizzesModels.GetQuiz(quiz.ID)
 
 		if err != nil {
-			return nil,&ErrorGeneric{err}
+			return nil, &ErrorGeneric{err}
 		}
 		quizzesModel = append(quizzesModel, *quizModel)
 	}
 
-	return quizzesModel,nil
+	return quizzesModel, nil
 }
 
-func (quizzesModels QuizzesModels) GetQuiz(quizId int) (*Quiz,error) {
+func (quizzesModels QuizzesModels) GetQuiz(quizId int) (*Quiz, error) {
 	quizModel := Quiz{}
 	questionsModel := []*Question{}
 
 	quiz, err := data.GetQuiz(quizId)
 
 	if err != nil {
-		return nil,&ErrorGeneric{err}
+		return nil, &ErrorGeneric{err}
 	}
 
 	quizModel.ID = quiz.ID
@@ -62,14 +62,14 @@ func (quizzesModels QuizzesModels) GetQuiz(quizId int) (*Quiz,error) {
 	questions, err := data.GetQuizQuestions(quizId)
 
 	if err != nil {
-		return nil,&ErrorGeneric{err}
+		return nil, &ErrorGeneric{err}
 	}
 
 	for _, question := range *questions {
-		choices,err:=GetChoicesStringArrays(question.ID)
+		choices, err := GetChoicesStringArrays(question.ID)
 
 		if err != nil {
-			return nil,&ErrorGeneric{err}
+			return nil, &ErrorGeneric{err}
 		}
 
 		questionModel := Question{
@@ -81,23 +81,23 @@ func (quizzesModels QuizzesModels) GetQuiz(quizId int) (*Quiz,error) {
 
 	quizModel.Questions = questionsModel
 
-	return &quizModel,nil
+	return &quizModel, nil
 }
 
-func GetChoicesStringArrays(questionId int) ([]*string,error) {
+func GetChoicesStringArrays(questionId int) ([]*string, error) {
 	questionChoices := []*string{}
 
 	choices, err := data.GetQuestionChoices(questionId)
 
 	if err != nil {
-		return nil,&ErrorGeneric{err}
+		return nil, &ErrorGeneric{err}
 	}
 
 	for _, choice := range *choices {
 		questionChoices = append(questionChoices, &choice.Choice)
 	}
 
-	return questionChoices,nil
+	return questionChoices, nil
 }
 
 func (quiz *Quiz) GetQuestions() []*Question {
