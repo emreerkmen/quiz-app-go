@@ -9,9 +9,9 @@ import (
 
 // 1, 1, []int{1, 1, 0}
 type Answer struct {
-	QuizID          int   `json:"quizID"`
-	UserID          int   `json:"userID"`
-	SelectedChoices []int `json:"selectedChoices"`
+	QuizID          int   `json:"quizID" validate:"required"`
+	UserID          int   `json:"userID" validate:"required"`
+	SelectedChoices []int `json:"selectedChoices" validate:"required"`
 }
 
 type AnswerModels struct {

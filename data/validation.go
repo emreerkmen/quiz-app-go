@@ -12,6 +12,12 @@ type ValidationError struct {
 }
 
 func (v ValidationError) Error() string {
+	fmt.Printf(
+		"Key: '%s' Error: Field validation for '%s' failed on the '%s' tag",
+		v.Namespace(),
+		v.Field(),
+		v.Tag(),
+	)
 	return fmt.Sprintf(
 		"Key: '%s' Error: Field validation for '%s' failed on the '%s' tag",
 		v.Namespace(),
@@ -27,6 +33,7 @@ type ValidationErrors []ValidationError
 func (v ValidationErrors) Errors() []string {
 	errs := []string{}
 	for _, err := range v {
+		fmt.Printf("%v\n", v)
 		errs = append(errs, err.Error())
 	}
 
@@ -46,14 +53,14 @@ func NewValidation() *Validation {
 }
 
 func (v *Validation) Validate(i interface{}) ValidationErrors {
-	errs := v.validate.Struct(i).(validator.ValidationErrors)
-
-	if len(errs) == 0 {
+	errs := v.validate.Struct(i)
+	fmt.Println("hata")
+	if errs == nil  {
 		return nil
 	}
-
-	var returnErrs []ValidationError
-	for _, err := range errs {
+	fmt.Println("hata")
+	var returnErrs ValidationErrors
+	for _, err := range errs.(validator.ValidationErrors) {
 		// cast the FieldError into our ValidationError and append to the slice
 		ve := ValidationError{err}
 		returnErrs = append(returnErrs, ve)

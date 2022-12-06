@@ -46,6 +46,7 @@ func main() {
 	// Subrouter for get routers
 	postRouter := serverMux.Methods(http.MethodPost).Subrouter()
 	postRouter.HandleFunc("/answer", quizHandler.AnswerQuiz)
+	postRouter.Use(quizHandler.MiddlewareValidateAnswer)
 
 	// CORS
 	ch := gohandlers.CORS(gohandlers.AllowedOrigins([]string{"*"}))
