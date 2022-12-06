@@ -29,20 +29,18 @@ func NewAnswerModels(logger hclog.Logger) *AnswerModels {
 }
 
 func (answerModel AnswerModels) AnswerQuiz(answer *Answer) (int, error) {
-	quiz, err := data.GetQuizByID(answer.QuizID)
 
+	quiz, err := data.GetQuizByID(answer.QuizID)
 	if err != nil {
 		return 0, &ErrorGeneric{err}
 	}
 
 	_, err = data.GetUser(answer.UserID)
-
 	if err != nil {
 		return 0, &ErrorGeneric{err}
 	}
 
 	questions, err := data.GetQuestionByQuizID(quiz.ID)
-
 	if err != nil {
 		return 0, &ErrorGeneric{err}
 	}
@@ -54,33 +52,9 @@ func (answerModel AnswerModels) AnswerQuiz(answer *Answer) (int, error) {
 		return 0, &ErrorAnswering{questionLength, answerLength}
 	}
 
-	answersDatas := []answerData{}
-	for index, selectedChoice := range answer.SelectedChoices {
-
-		question := (*questions)[index]
-		//choices length kontrolü yap
-		choices, err := data.GetQuestionChoices(question.ID)
-		if err != nil {
-			return 0, &ErrorGeneric{err}
-		}
-
-		choicesLength := len(*choices)
-
-		//Todo: validation ile bunu yap ve sil
-		if selectedChoice < -1 {
-			return 0, &ErrorUnExpectedChoice{questionID: question.ID, choiceLenght: choicesLength, selectedChoice: selectedChoice - 1}
-		}
-
-		if selectedChoice+1 > choicesLength {
-			return 0, &ErrorUnExpectedChoice{questionID: question.ID, choiceLenght: choicesLength, selectedChoice: selectedChoice}
-		}
-
-		answerData := answerData{
-			question:       question,
-			selectedChoice: selectedChoice,
-		}
-
-		answersDatas = append(answersDatas, answerData)
+	answersDatas,err := answer.GetAnswers(questions)
+	if err != nil {
+		return 0, &ErrorGeneric{err}
 	}
 
 	quizResult := data.CreateNewQuizResult(answer.QuizID, answer.UserID)
@@ -109,4 +83,37 @@ type ErrorUnExpectedChoice struct {
 
 func (err *ErrorUnExpectedChoice) Error() string {
 	return fmt.Sprintf("Selected a choise that does not eixst. Question ID: %v, Choice Length: %v, Selected Choice: %v", err.questionID, err.choiceLenght, err.selectedChoice+1)
+}
+
+
+func(answer *Answer) GetAnswers(questions *data.Questions) ([]answerData,error){
+
+	answersDatas := []answerData{}
+	for index, selectedChoice := range answer.SelectedChoices {
+
+		question := (*questions)[index]
+
+		choices, err := data.GetQuestionChoices(question.ID)
+		if err != nil {
+			return nil, &ErrorGeneric{err}
+		}
+		choicesLength := len(*choices)
+
+		if selectedChoice < -1 {
+			return nil, &ErrorUnExpectedChoice{questionID: question.ID, choiceLenght: choicesLength, selectedChoice: selectedChoice - 1}
+		}
+
+		if selectedChoice+1 > choicesLength {
+			return nil, &ErrorUnExpectedChoice{questionID: question.ID, choiceLenght: choicesLength, selectedChoice: selectedChoice}
+		}
+
+		answerData := answerData{
+			question:       question,
+			selectedChoice: selectedChoice,
+		}
+
+		answersDatas = append(answersDatas, answerData)
+	}
+
+	return answersDatas,nil
 }

@@ -63,8 +63,8 @@ func (quizResult *QuizResult) GetTotalCorrectAnswers() int {
 	return quizResult.totalCorrectAnswers
 }
 
-func (quizResult *QuizResult) GetAnswers() (*answers, error) {
-	answers := answers{}
+func (quizResult *QuizResult) GetAnswers() (*Answers, error) {
+	answers := Answers{}
 	for _, answer := range answersList {
 		if answer.quizResultID == quizResult.ID {
 			answers = append(answers, answer)

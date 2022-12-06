@@ -3,7 +3,6 @@ package model
 import (
 	"fmt"
 	"quiz-app/quiz-api/data"
-
 	"github.com/hashicorp/go-hclog"
 )
 
@@ -43,6 +42,7 @@ func (quizResultModesl QuizResultModels) GetAllResults() ([]Result, error) {
 		if err != nil {
 			return nil, &ErrorGeneric{err}
 		}
+
 		resultModels = append(resultModels, *quizResult)
 	}
 
@@ -53,12 +53,12 @@ func (quizResultModesl QuizResultModels) GetResult(quizResultID int) (*Result, e
 	result := Result{}
 
 	quizResult, err := data.GetQuizResultsByQuizResultID(quizResultID)
-
 	if err != nil {
 		fmt.Println(err)
 	}
 
 	result.QuizId = quizResult.GetQuizID()
+
 	quiz, err := data.GetQuizByID(result.QuizId)
 	if err != nil {
 		fmt.Println(err)
@@ -67,7 +67,6 @@ func (quizResultModesl QuizResultModels) GetResult(quizResultID int) (*Result, e
 	result.QuizName = quiz.Name
 
 	user, err := data.GetUser(quizResult.GetUserID())
-
 	if err != nil {
 		quizResultModesl.logger.Error("Error", "err", err)
 		return nil, &ErrorQuizResult{message: err}
@@ -76,51 +75,16 @@ func (quizResultModesl QuizResultModels) GetResult(quizResultID int) (*Result, e
 	result.UserName = user.GetUserName()
 
 	questions, err := data.GetQuizQuestions(result.QuizId)
-
 	if err != nil {
 		fmt.Println(err)
 	}
 
 	answers, err := quizResult.GetAnswers()
-
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	questionAndAnswers := QuestionAndAnswers{}
-	for index, question := range *questions {
-		questionText := question.Question
-		choices, err := data.GetQuestionChoices(question.ID)
-
-		if err != nil {
-			fmt.Println(err)
-		}
-
-		correctChoiceID := (*answers)[index].GetCorrectChoiceID()
-		selectedChoiceID := (*answers)[index].GetSelectedChoiceID()
-
-		var selectedAnswer string
-		if selectedChoiceID != -1 {
-			selectedAnswer = (*choices)[selectedChoiceID].Choice
-		}
-		correctAnswer := (*choices)[correctChoiceID].Choice
-
-		questionAndAnswer := QuestionAndAnswer{Question: questionText,
-			SelectedAnswer: selectedAnswer,
-			CorrectAnswer:  correctAnswer}
-
-		if selectedChoiceID == -1 {
-			questionAndAnswer.Result = "Empty."
-		} else if selectedChoiceID == correctChoiceID {
-			questionAndAnswer.Result = "Correct Answer :)"
-		} else {
-			questionAndAnswer.Result = "Wrong Answer :("
-		}
-
-		questionAndAnswers = append(questionAndAnswers, &questionAndAnswer)
-	}
-
-	result.QuestionAndAnswers = questionAndAnswers
+	result.QuestionAndAnswers = GetQuestionsAndAnswers(answers,questions)
 	result.TotalCorrectAnswers = quizResult.GetTotalCorrectAnswers()
 	result.Status = CalculateStatus(quizResult.GetTotalCorrectAnswers(), quizResultID)
 
@@ -162,4 +126,42 @@ type ErrorGeneric struct {
 
 func (err *ErrorGeneric) Error() string {
 	return fmt.Sprintf("%v", err.message)
+}
+
+func GetQuestionsAndAnswers(answers *data.Answers, questions *data.Questions) QuestionAndAnswers{
+
+	questionAndAnswers := QuestionAndAnswers{}
+	for index, question := range *questions {
+		questionText := question.Question
+
+		choices, err := data.GetQuestionChoices(question.ID)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		correctChoiceID := (*answers)[index].GetCorrectChoiceID()
+		selectedChoiceID := (*answers)[index].GetSelectedChoiceID()
+
+		var selectedAnswer string
+		if selectedChoiceID != -1 {
+			selectedAnswer = (*choices)[selectedChoiceID].Choice
+		}
+		correctAnswer := (*choices)[correctChoiceID].Choice
+
+		questionAndAnswer := QuestionAndAnswer{Question: questionText,
+			SelectedAnswer: selectedAnswer,
+			CorrectAnswer:  correctAnswer}
+
+		if selectedChoiceID == -1 {
+			questionAndAnswer.Result = "Empty."
+		} else if selectedChoiceID == correctChoiceID {
+			questionAndAnswer.Result = "Correct Answer :)"
+		} else {
+			questionAndAnswer.Result = "Wrong Answer :("
+		}
+
+		questionAndAnswers = append(questionAndAnswers, &questionAndAnswer)
+	}
+
+	return questionAndAnswers
 }

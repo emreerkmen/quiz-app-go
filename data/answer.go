@@ -11,9 +11,9 @@ type Answer struct {
 	result           int //0=empty, 1=true, 2=false
 }
 
-type answers []*Answer
+type Answers []*Answer
 
-var answersList = answers{
+var answersList = Answers{
 	&Answer{ID: 1, quizResultID: 1,
 		questionID: 1, correctChoiceID: 1, selectedChoiceID: 1},
 	&Answer{ID: 2, quizResultID: 1,
@@ -48,7 +48,7 @@ func (err *ErrorAnswersNotFound) Error() string {
 	return fmt.Sprintf("Could not found answers for quiz result. Quiz result id : %v", err.quizResultID)
 }
 
-func GetAllAnswers() answers {
+func GetAllAnswers() Answers {
 	return answersList
 }
 

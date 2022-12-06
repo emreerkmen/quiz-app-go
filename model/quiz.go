@@ -50,7 +50,6 @@ func (quizzesModels QuizzesModels) GetQuiz(quizId int) (*Quiz, error) {
 	questionsModel := []*Question{}
 
 	quiz, err := data.GetQuiz(quizId)
-
 	if err != nil {
 		return nil, &ErrorGeneric{err}
 	}
@@ -60,14 +59,13 @@ func (quizzesModels QuizzesModels) GetQuiz(quizId int) (*Quiz, error) {
 	quizModel.Description = quiz.Description
 
 	questions, err := data.GetQuizQuestions(quizId)
-
 	if err != nil {
 		return nil, &ErrorGeneric{err}
 	}
 
 	for _, question := range *questions {
-		choices, err := GetChoicesStringArrays(question.ID)
 
+		choices, err := GetChoicesStringArrays(question.ID)
 		if err != nil {
 			return nil, &ErrorGeneric{err}
 		}
@@ -88,7 +86,6 @@ func GetChoicesStringArrays(questionId int) ([]*string, error) {
 	questionChoices := []*string{}
 
 	choices, err := data.GetQuestionChoices(questionId)
-
 	if err != nil {
 		return nil, &ErrorGeneric{err}
 	}
