@@ -16,5 +16,6 @@ func ToJSON(i interface{}, w io.Writer) error {
 // in an io.Reader to the given interface
 func FromJSON(i interface{}, r io.Reader) error {
 	d := json.NewDecoder(r)
+	
 	return d.Decode(i)
 }
