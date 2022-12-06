@@ -11,7 +11,6 @@ import (
 	"quiz-app/quiz-api/handlers"
 	"quiz-app/quiz-api/model"
 	"time"
-
 	gohandlers "github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/hashicorp/go-hclog"
@@ -109,8 +108,8 @@ func makeCuopleOfQuizzes(logger hclog.Logger,quizModels model.QuizzesModels, qui
 	}
 
 	for _, a := range exampleAnswers {
+		
 		quizResultID, err := answerModel.AnswerQuiz(a)
-
 		if err != nil {
 			logger.Error("Quiz result error", "quizResultID", quizResultID, "err", err)
 		}
