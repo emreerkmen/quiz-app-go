@@ -56,7 +56,6 @@ type QuizResult struct{
 	QuizResultID int
 }
 
-// Business logic
 func GetQuizzes(beautify bool) (result string) {
 
 	domain := "http://localhost:9090/v1/"
@@ -73,7 +72,6 @@ func GetQuizzes(beautify bool) (result string) {
 	return GetBeautifyJson(quizzes, resp.Body, beautify)
 }
 
-// Business logic
 func GetQuizResults(beautify bool) (result string) {
 
 	domain := "http://localhost:9090/v1/"
@@ -90,7 +88,6 @@ func GetQuizResults(beautify bool) (result string) {
 	return GetBeautifyJson(quizzes, resp.Body, beautify)
 }
 
-// Business logic
 func PostAnswer(quizID string, userID string, selectedAnswers string, beautify bool) (result string) {
 
 	intQuizID, err := strconv.Atoi(quizID)
@@ -103,24 +100,7 @@ func PostAnswer(quizID string, userID string, selectedAnswers string, beautify b
 		log.Fatal(err)
 	}
 
-	intSelectedAnswers := []int{}
-
-	var ans string
-	for _, char := range selectedAnswers+"," {
-
-		if char == ',' {
-
-			intAns, err := strconv.Atoi(ans)
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			intSelectedAnswers = append(intSelectedAnswers, intAns)
-			ans = ""
-			continue
-		}
-		ans = ans + string(char)
-	}
+	intSelectedAnswers := getIntArrayAnswers(selectedAnswers)
 
 	domain := "http://localhost:9090/v1/"
 	uri := "answer"
@@ -143,6 +123,28 @@ func PostAnswer(quizID string, userID string, selectedAnswers string, beautify b
 	quizResultID:=QuizResult{}
 
 	return GetBeautifyJson(quizResultID, resp.Body, beautify)
+}
+
+func getIntArrayAnswers(selectedAnswers string) []int {
+	intSelectedAnswers := []int{}
+
+	var ans string
+	for _, char := range selectedAnswers + "," {
+
+		if char == ',' {
+
+			intAns, err := strconv.Atoi(ans)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			intSelectedAnswers = append(intSelectedAnswers, intAns)
+			ans = ""
+			continue
+		}
+		ans = ans + string(char)
+	}
+	return intSelectedAnswers
 }
 
 // Response body to string with beautify json
