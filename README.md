@@ -21,7 +21,7 @@ $cd cmd/quizcli
 $go run . --help
 ```
 
-# End Points
+# End Points ans Samples
 
 ## GET "/v1/quizzes"
 
@@ -32,58 +32,50 @@ response:
 [
     {
         "ID": 1,
-        "name": "General Quiz",
-        "description": "This is a general quiz. You can find questions from any topic.",
+        "name": "Animal Quiz",
+        "description": "This is a animal quiz. You can find questions about animals.",
         "questions": [
             {
-                "question": "What is the best game in the world?",
+                "question": "In which country can you find the smallest jellyfish?",
                 "choices": [
-                    "God Of War",
-                    "Call Of Duty"
+                    "South Africa",
+                    "China",
+                    "Australia",
+                    "Iceland"
                 ]
             },
             {
-                "question": "What is the capital of Malta",
+                "question": "What animals are Holstein Friesians?",
                 "choices": [
-                    "GTA 5",
-                    "NFS",
-                    "Mario"
-                ]
-            },
-            {
-                "question": "What is the capital of Turkey",
-                "choices": [
-                    "Ankara",
-                    "İstanbul",
-                    "İzmir"
+                    "Cats",
+                    "Dogs",
+                    "Horses",
+                    "Cows"
                 ]
             }
         ]
     },
     {
         "ID": 2,
-        "name": "Game Quiz",
-        "description": "This quiz has questions that specific to video games.",
+        "name": "Food Quiz",
+        "description": "This quiz has questions that specific to food. Pls make the quiz with a full stomach :).",
         "questions": [
             {
-                "question": "Test What is the best game in the world?",
+                "question": "Which one of the following puddings is not sweet?",
                 "choices": [
-                    "God Of War",
-                    "GTA 5"
+                    "Sticky Toffee pudding",
+                    "Christmas pudding",
+                    "Yorkshire pudding",
+                    "Bread and butter pudding"
                 ]
             },
             {
-                "question": "Test What is the capital of Malta",
+                "question": "Which one of the following ingredients wouldn’t you find in a full English breakfast?",
                 "choices": [
-                    "NFS",
-                    "Mario"
-                ]
-            },
-            {
-                "question": "Test What is the capital of Turkey",
-                "choices": [
-                    "Call Of Duty",
-                    "Ankara"
+                    "Baked Beans",
+                    "Mushroom",
+                    "Broccoli",
+                    "Bacon"
                 ]
             }
         ]
@@ -100,57 +92,93 @@ response:
 [
     {
         "quizID": 1,
-        "quizName": "General Quiz",
+        "quizName": "Animal Quiz",
         "userName": "Emre",
         "questionAndAnswers": [
             {
-                "question": "What is the best game in the world?",
-                "selectedAnswer": "Call Of Duty",
-                "correctAnswer": "Call Of Duty",
-                "result": "Correct Answer :)"
+                "question": "In which country can you find the smallest jellyfish?",
+                "selectedAnswer": "",
+                "correctAnswer": "Australia",
+                "result": "Empty."
             },
             {
-                "question": "What is the capital of Malta",
-                "selectedAnswer": "NFS",
-                "correctAnswer": "GTA 5",
+                "question": "What animals are Holstein Friesians?",
+                "selectedAnswer": "Dogs",
+                "correctAnswer": "Cows",
                 "result": "Wrong Answer :("
             },
             {
-                "question": "What is the capital of Turkey",
-                "selectedAnswer": "İstanbul",
-                "correctAnswer": "Ankara",
+                "question": "Which famous horse race is held in Melbourne, Australia?",
+                "selectedAnswer": "Melbourne Cup",
+                "correctAnswer": "Melbourne Cup",
+                "result": "Correct Answer :)"
+            },
+            {
+                "question": "Which famous dolphin can you find in Clearwater Aquarium, Florida?",
+                "selectedAnswer": "Flipper",
+                "correctAnswer": "Winter",
+                "result": "Wrong Answer :("
+            },
+            {
+                "question": "Where can you find the largest coral reef in the world?",
+                "selectedAnswer": "Mexico",
+                "correctAnswer": "Australia",
+                "result": "Wrong Answer :("
+            },
+            {
+                "question": "Which country has the most sheep in the world?",
+                "selectedAnswer": "Wales",
+                "correctAnswer": "China",
                 "result": "Wrong Answer :("
             }
         ],
         "totalCorrectAnswers": 1,
-        "status": 16
+        "status": 14
     },
     {
         "quizID": 1,
-        "quizName": "General Quiz",
+        "quizName": "Animal Quiz",
         "userName": "Emre",
         "questionAndAnswers": [
             {
-                "question": "What is the best game in the world?",
-                "selectedAnswer": "Call Of Duty",
-                "correctAnswer": "Call Of Duty",
+                "question": "In which country can you find the smallest jellyfish?",
+                "selectedAnswer": "South Africa",
+                "correctAnswer": "South Africa",
                 "result": "Correct Answer :)"
             },
             {
-                "question": "What is the capital of Malta",
-                "selectedAnswer": "Mario",
-                "correctAnswer": "NFS",
+                "question": "What animals are Holstein Friesians?",
+                "selectedAnswer": "Horses",
+                "correctAnswer": "Horses",
+                "result": "Correct Answer :)"
+            },
+            {
+                "question": "Which famous horse race is held in Melbourne, Australia?",
+                "selectedAnswer": "Melbourne Cup",
+                "correctAnswer": "The Grand National",
                 "result": "Wrong Answer :("
             },
             {
-                "question": "What is the capital of Turkey",
-                "selectedAnswer": "İstanbul",
-                "correctAnswer": "İstanbul",
-                "result": "Correct Answer :)"
+                "question": "Which famous dolphin can you find in Clearwater Aquarium, Florida?",
+                "selectedAnswer": "Flipper",
+                "correctAnswer": "Fungie",
+                "result": "Wrong Answer :("
+            },
+            {
+                "question": "Where can you find the largest coral reef in the world?",
+                "selectedAnswer": "Mexico",
+                "correctAnswer": "Belize",
+                "result": "Wrong Answer :("
+            },
+            {
+                "question": "Which country has the most sheep in the world?",
+                "selectedAnswer": "Wales",
+                "correctAnswer": "India",
+                "result": "Wrong Answer :("
             }
         ],
-        "totalCorrectAnswers": 1,
-        "status": 16
+        "totalCorrectAnswers": 2,
+        "status": 57
     }
 ]    
 ```
@@ -163,30 +191,48 @@ response:
 ```bash
 {
     "quizID": 1,
-    "quizName": "General Quiz",
+    "quizName": "Animal Quiz",
     "userName": "Emre",
     "questionAndAnswers": [
         {
-            "question": "What is the best game in the world?",
-            "selectedAnswer": "Call Of Duty",
-            "correctAnswer": "Call Of Duty",
+            "question": "In which country can you find the smallest jellyfish?",
+            "selectedAnswer": "South Africa",
+            "correctAnswer": "Australia",
+            "result": "Wrong Answer :("
+        },
+        {
+            "question": "What animals are Holstein Friesians?",
+            "selectedAnswer": "Cats",
+            "correctAnswer": "Cows",
+            "result": "Wrong Answer :("
+        },
+        {
+            "question": "Which famous horse race is held in Melbourne, Australia?",
+            "selectedAnswer": "The Grand National",
+            "correctAnswer": "Melbourne Cup",
+            "result": "Wrong Answer :("
+        },
+        {
+            "question": "Which famous dolphin can you find in Clearwater Aquarium, Florida?",
+            "selectedAnswer": "Flipper",
+            "correctAnswer": "Winter",
+            "result": "Wrong Answer :("
+        },
+        {
+            "question": "Where can you find the largest coral reef in the world?",
+            "selectedAnswer": "Australia",
+            "correctAnswer": "Australia",
             "result": "Correct Answer :)"
         },
         {
-            "question": "What is the capital of Malta",
-            "selectedAnswer": "NFS",
-            "correctAnswer": "GTA 5",
-            "result": "Wrong Answer :("
-        },
-        {
-            "question": "What is the capital of Turkey",
-            "selectedAnswer": "İstanbul",
-            "correctAnswer": "Ankara",
-            "result": "Wrong Answer :("
+            "question": "Which country has the most sheep in the world?",
+            "selectedAnswer": "China",
+            "correctAnswer": "China",
+            "result": "Correct Answer :)"
         }
     ],
-    "totalCorrectAnswers": 1,
-    "status": 16
+    "totalCorrectAnswers": 2,
+    "status": 57
 }
 ```
 
@@ -200,6 +246,9 @@ request;
     "quizID": 1,
     "userId": 1,
     "selectedChoices": [
+        0,
+        0,
+        0,
         0,
         0,
         0
