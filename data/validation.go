@@ -55,7 +55,7 @@ func NewValidation() *Validation {
 func (v *Validation) Validate(i interface{}) ValidationErrors {
 	errs := v.validate.Struct(i)
 	fmt.Println("hata")
-	if errs == nil  {
+	if errs == nil {
 		return nil
 	}
 	fmt.Println("hata")

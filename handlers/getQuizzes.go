@@ -10,7 +10,7 @@ func (quizHandler *QuizHandler) GetAllQuizzes(rw http.ResponseWriter, r *http.Re
 	quizHandler.logger.Debug("Get all records")
 	rw.Header().Add("Content-Type", "application/json")
 
-	quizzes,err:= quizHandler.quizzesModels.GetAllQuizzes()
+	quizzes, err := quizHandler.quizzesModels.GetAllQuizzes()
 
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusBadRequest)

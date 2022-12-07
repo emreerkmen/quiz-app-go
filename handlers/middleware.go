@@ -14,7 +14,7 @@ func (quizHandler *QuizHandler) MiddlewareValidateAnswer(next http.Handler) http
 		quizHandler.logger.Debug("Starting middleware")
 
 		// Declare a new Answer struct.
-		answer:=model.Answer{}
+		answer := model.Answer{}
 
 		err := data.FromJSON(&answer, r.Body)
 		if err != nil {
@@ -27,7 +27,7 @@ func (quizHandler *QuizHandler) MiddlewareValidateAnswer(next http.Handler) http
 
 		// validate the answer
 		errs := quizHandler.validation.Validate(&answer)
-		if len(errs) != 0  {
+		if len(errs) != 0 {
 			quizHandler.logger.Error("Validating answer", "error", errs)
 
 			// return the validation messages as an array

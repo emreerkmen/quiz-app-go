@@ -2,8 +2,8 @@ package model
 
 import (
 	"fmt"
-	"quiz-app/quiz-api/data"
 	"github.com/hashicorp/go-hclog"
+	"quiz-app/quiz-api/data"
 )
 
 type Result struct {
@@ -88,7 +88,7 @@ func (quizResultModesl QuizResultModels) GetResult(quizResultID int) (*Result, e
 		return nil, &ErrorQuizResult{message: err}
 	}
 
-	result.QuestionAndAnswers = GetQuestionsAndAnswers(answers,questions)
+	result.QuestionAndAnswers = GetQuestionsAndAnswers(answers, questions)
 	result.TotalCorrectAnswers = quizResult.GetTotalCorrectAnswers()
 	result.Status = CalculateStatus(quizResult.GetTotalCorrectAnswers(), quizResultID)
 
@@ -132,7 +132,7 @@ func (err *ErrorGeneric) Error() string {
 	return fmt.Sprintf("%v", err.message)
 }
 
-func GetQuestionsAndAnswers(answers *data.Answers, questions *data.Questions) QuestionAndAnswers{
+func GetQuestionsAndAnswers(answers *data.Answers, questions *data.Questions) QuestionAndAnswers {
 
 	questionAndAnswers := QuestionAndAnswers{}
 	for index, question := range *questions {

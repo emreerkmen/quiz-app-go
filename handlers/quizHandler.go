@@ -1,9 +1,9 @@
 package handlers
 
 import (
+	"github.com/hashicorp/go-hclog"
 	"quiz-app/quiz-api/data"
 	"quiz-app/quiz-api/model"
-	"github.com/hashicorp/go-hclog"
 )
 
 // KeyAnswer is a key used for the Answer object in the context

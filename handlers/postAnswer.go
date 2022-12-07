@@ -6,7 +6,7 @@ import (
 	"quiz-app/quiz-api/model"
 )
 
-type QuizResult struct{
+type QuizResult struct {
 	QuizResultID int
 }
 
@@ -16,12 +16,12 @@ func (quizHandler *QuizHandler) AnswerQuiz(rw http.ResponseWriter, r *http.Reque
 
 	// Get answer from context
 	answer := r.Context().Value(KeyAnswer{}).(*model.Answer)
-	quizHandler.logger.Debug("Post","Answer",answer)
+	quizHandler.logger.Debug("Post", "Answer", answer)
 
-	ID,err := quizHandler.answerModels.AnswerQuiz(answer)
+	ID, err := quizHandler.answerModels.AnswerQuiz(answer)
 	quizResultID := QuizResult{QuizResultID: ID}
 
-	if err!=nil{
+	if err != nil {
 		quizHandler.logger.Error("There are erros when answering quiz", "Answer", answer, "error", err)
 		http.Error(rw, err.Error(), http.StatusBadRequest)
 		return

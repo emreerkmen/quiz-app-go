@@ -3,6 +3,9 @@ package main
 import (
 	"context"
 	"fmt"
+	gohandlers "github.com/gorilla/handlers"
+	"github.com/gorilla/mux"
+	"github.com/hashicorp/go-hclog"
 	"log"
 	"net/http"
 	"os"
@@ -11,9 +14,6 @@ import (
 	"quiz-app/quiz-api/handlers"
 	"quiz-app/quiz-api/model"
 	"time"
-	gohandlers "github.com/gorilla/handlers"
-	"github.com/gorilla/mux"
-	"github.com/hashicorp/go-hclog"
 )
 
 func main() {
@@ -29,7 +29,7 @@ func main() {
 	quizModel := model.NewQuizzesModels(logger)
 	quizResultModels := model.NewQuizResultModels(logger)
 	answertModels := model.NewAnswerModels(logger)
-	makeCuopleOfQuizzes(logger,*quizModel, *quizResultModels, *answertModels)
+	makeCuopleOfQuizzes(logger, *quizModel, *quizResultModels, *answertModels)
 
 	// create the handlers
 	quizHandler := handlers.NewQuizHandler(logger, validation, quizModel, quizResultModels, answertModels)
@@ -90,7 +90,7 @@ func main() {
 	log.Println("Server exiting")
 }
 
-func makeCuopleOfQuizzes(logger hclog.Logger,quizModels model.QuizzesModels, quizResultModels model.QuizResultModels, answerModel model.AnswerModels) {
+func makeCuopleOfQuizzes(logger hclog.Logger, quizModels model.QuizzesModels, quizResultModels model.QuizResultModels, answerModel model.AnswerModels) {
 	exampleAnswers := []*model.Answer{
 		{QuizID: 1,
 			UserID:          1,
@@ -110,12 +110,12 @@ func makeCuopleOfQuizzes(logger hclog.Logger,quizModels model.QuizzesModels, qui
 	}
 
 	for _, a := range exampleAnswers {
-		
+
 		quizResultID, err := answerModel.AnswerQuiz(a)
 		if err != nil {
 			logger.Error("Quiz result error", "quizResultID", quizResultID, "err", err)
 		}
-		
+
 		quizResultModels.GetResult(quizResultID)
 	}
 }

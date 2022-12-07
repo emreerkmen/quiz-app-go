@@ -52,7 +52,7 @@ func (answerModel AnswerModels) AnswerQuiz(answer *Answer) (int, error) {
 		return 0, &ErrorAnswering{questionLength, answerLength}
 	}
 
-	answersDatas,err := answer.GetAnswers(questions)
+	answersDatas, err := answer.GetAnswers(questions)
 	if err != nil {
 		return 0, &ErrorGeneric{err}
 	}
@@ -85,8 +85,7 @@ func (err *ErrorUnExpectedChoice) Error() string {
 	return fmt.Sprintf("Selected a choise that does not eixst. Question ID: %v, Choice Length: %v, Selected Choice: %v", err.questionID, err.choiceLenght, err.selectedChoice+1)
 }
 
-
-func(answer *Answer) GetAnswers(questions *data.Questions) ([]answerData,error){
+func (answer *Answer) GetAnswers(questions *data.Questions) ([]answerData, error) {
 
 	answersDatas := []answerData{}
 	for index, selectedChoice := range answer.SelectedChoices {
@@ -115,5 +114,5 @@ func(answer *Answer) GetAnswers(questions *data.Questions) ([]answerData,error){
 		answersDatas = append(answersDatas, answerData)
 	}
 
-	return answersDatas,nil
+	return answersDatas, nil
 }
