@@ -18,6 +18,7 @@ type Question struct {
 	Choices  []*string `json:"choices"`
 }
 
+type Quizzes []*Quiz
 type Questions []*Question
 
 type QuizzesModels struct {
