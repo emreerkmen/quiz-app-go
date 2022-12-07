@@ -133,7 +133,7 @@ response:
             }
         ],
         "totalCorrectAnswers": 1,
-        "status": 14
+        "status": "You scored higher than 25% of all quizzers"
     },
     {
         "quizID": 1,
@@ -178,7 +178,7 @@ response:
             }
         ],
         "totalCorrectAnswers": 2,
-        "status": 57
+        "status": "You scored higher than 57% of all quizzers"
     }
 ]    
 ```
@@ -232,7 +232,7 @@ response:
         }
     ],
     "totalCorrectAnswers": 2,
-    "status": 57
+    "status": "You scored higher than 57% of all quizzers"
 }
 ```
 
