@@ -246,12 +246,12 @@ request;
     "quizID": 1,
     "userId": 1,
     "selectedChoices": [
+        -1,   // -1:Empty
+        1,
         0,
+        2,
         0,
-        0,
-        0,
-        0,
-        0
+        3
     ]
 }
 ```
