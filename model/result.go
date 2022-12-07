@@ -54,14 +54,16 @@ func (quizResultModesl QuizResultModels) GetResult(quizResultID int) (*Result, e
 
 	quizResult, err := data.GetQuizResultsByQuizResultID(quizResultID)
 	if err != nil {
-		fmt.Println(err)
+		quizResultModesl.logger.Error("Error", "err", err)
+		return nil, &ErrorQuizResult{message: err}
 	}
 
 	result.QuizId = quizResult.GetQuizID()
 
 	quiz, err := data.GetQuizByID(result.QuizId)
 	if err != nil {
-		fmt.Println(err)
+		quizResultModesl.logger.Error("Error", "err", err)
+		return nil, &ErrorQuizResult{message: err}
 	}
 
 	result.QuizName = quiz.Name
@@ -76,12 +78,14 @@ func (quizResultModesl QuizResultModels) GetResult(quizResultID int) (*Result, e
 
 	questions, err := data.GetQuizQuestions(result.QuizId)
 	if err != nil {
-		fmt.Println(err)
+		quizResultModesl.logger.Error("Error", "err", err)
+		return nil, &ErrorQuizResult{message: err}
 	}
 
 	answers, err := quizResult.GetAnswers()
 	if err != nil {
-		fmt.Println(err)
+		quizResultModesl.logger.Error("Error", "err", err)
+		return nil, &ErrorQuizResult{message: err}
 	}
 
 	result.QuestionAndAnswers = GetQuestionsAndAnswers(answers,questions)

@@ -42,6 +42,7 @@ func main() {
 	getRouter := versionRouter.Methods(http.MethodGet).Subrouter()
 	getRouter.HandleFunc("/quizzes", quizHandler.GetAllQuizzes)
 	getRouter.HandleFunc("/quizResults", quizHandler.GetAllQuizResults)
+	getRouter.HandleFunc("/quizResult/{id:[0-9]+}", quizHandler.GetQuizResult)
 
 	// Subrouter for get routers
 	postRouter := versionRouter.Methods(http.MethodPost).Subrouter()
