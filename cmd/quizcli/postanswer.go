@@ -11,6 +11,8 @@ var postanswerCmd = &cobra.Command{
     Aliases: []string{"pa"},
     Short:  "Make a quiz",
     Args:  cobra.ExactArgs(3),
+	Example: `post-answer {quizID} {userID} [selectedChoice,selectedChoice,selectedChoice,..] 
+post-asnwer 1 1 1,1,1`,
     Run: func(cmd *cobra.Command, args []string) {
 
 		quizID:=args[0]
