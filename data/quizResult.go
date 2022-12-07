@@ -13,7 +13,7 @@ type QuizResults []*QuizResult
 
 var quizResultsList = QuizResults{
 	&QuizResult{ID: 1, quizID: 1, userID: 1, totalCorrectAnswers: 1},
-	&QuizResult{ID: 2, quizID: 1, userID: 1, totalCorrectAnswers: 1},
+	&QuizResult{ID: 2, quizID: 1, userID: 1, totalCorrectAnswers: 2},
 }
 
 type ErrorQuizResultNotFound struct {

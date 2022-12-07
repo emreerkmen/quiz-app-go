@@ -94,19 +94,19 @@ func makeCuopleOfQuizzes(logger hclog.Logger, quizModels model.QuizzesModels, qu
 	exampleAnswers := []*model.Answer{
 		{QuizID: 1,
 			UserID:          1,
-			SelectedChoices: []int{1, 1, -1}},
+			SelectedChoices: []int{3, 0, -1, 1, 0, 2}},
 		{QuizID: 1,
 			UserID:          1,
-			SelectedChoices: []int{-1, -1, -1}},
+			SelectedChoices: []int{3, 1, -1, 1, 2, 2}},
 		{QuizID: 1,
 			UserID:          1,
-			SelectedChoices: []int{1, 0, 0}},
-		{QuizID: 1,
+			SelectedChoices: []int{3, 1, 2, 0, -1, 2}},
+		{QuizID: 2,
 			UserID:          1,
-			SelectedChoices: []int{1, 1, 0}},
-		{QuizID: 1,
+			SelectedChoices: []int{3, 1, -1, 1, 3, 2}},
+		{QuizID: 2,
 			UserID:          1,
-			SelectedChoices: []int{1, 1, 0}},
+			SelectedChoices: []int{3, 0, 2, 1, -1, 2}},
 	}
 
 	for _, a := range exampleAnswers {
