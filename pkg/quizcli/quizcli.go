@@ -27,6 +27,7 @@ type Question struct {
 
 type Quizzes []Quiz
 type Questions []Question
+type Results []Result
 
 type Result struct {
 	QuizId              int                 `json:"quizID"`
@@ -52,7 +53,7 @@ type Answer struct {
 
 type QuestionAndAnswers []QuestionAndAnswer
 
-type QuizResult struct{
+type QuizResult struct {
 	QuizResultID int
 }
 
@@ -83,9 +84,52 @@ func GetQuizResults(beautify bool) (result string) {
 		log.Fatal(getErr)
 	}
 
-	quizzes := Quizzes{}
+	if resp.StatusCode != 200 {
+		body, err := io.ReadAll(resp.Body)
+		// b, err := ioutil.ReadAll(resp.Body)  Go.1.15 and earlier
+		if err != nil {
+			log.Fatalln(err)
+		}
+		return string(body)
+	}
 
-	return GetBeautifyJson(quizzes, resp.Body, beautify)
+	quizResults := Results{}
+
+	return GetBeautifyJson(quizResults, resp.Body, beautify)
+}
+
+func GetQuizResult(quizResultID string, beautify bool) (result string) {
+
+	domain := "http://localhost:9090/v1/"
+	uri := "quizResult/" + quizResultID
+	url := domain + uri
+
+	resp, getErr := http.Get(url)
+	if getErr != nil {
+		log.Fatal(getErr)
+	}
+
+	if resp.StatusCode != 200 {
+		body, err := io.ReadAll(resp.Body)
+		// b, err := ioutil.ReadAll(resp.Body)  Go.1.15 and earlier
+		if err != nil {
+			log.Fatalln(err)
+		}
+		return string(body)
+	}
+
+	if resp.StatusCode != 200 {
+		body, err := io.ReadAll(resp.Body)
+		// b, err := ioutil.ReadAll(resp.Body)  Go.1.15 and earlier
+		if err != nil {
+			log.Fatalln(err)
+		}
+		return string(body)
+	}
+
+	quizResult := Result{}
+
+	return GetBeautifyJson(quizResult, resp.Body, beautify)
 }
 
 func PostAnswer(quizID string, userID string, selectedAnswers string, beautify bool) (result string) {
@@ -120,7 +164,16 @@ func PostAnswer(quizID string, userID string, selectedAnswers string, beautify b
 
 	defer resp.Body.Close()
 
-	quizResultID:=QuizResult{}
+	if resp.StatusCode != 200 {
+		body, err := io.ReadAll(resp.Body)
+		// b, err := ioutil.ReadAll(resp.Body)  Go.1.15 and earlier
+		if err != nil {
+			log.Fatalln(err)
+		}
+		return string(body)
+	}
+
+	quizResultID := QuizResult{}
 
 	return GetBeautifyJson(quizResultID, resp.Body, beautify)
 }

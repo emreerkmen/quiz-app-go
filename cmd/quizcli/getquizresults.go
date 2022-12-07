@@ -8,7 +8,7 @@ import (
 
 var getQuizResultsCmd = &cobra.Command{
     Use:   "get-quiz-results",
-    Aliases: []string{"gqr"},
+    Aliases: []string{"gqrs"},
     Short:  "Get all quiz results",
     Args:  cobra.ExactArgs(0),
     Run: func(cmd *cobra.Command, args []string) {
