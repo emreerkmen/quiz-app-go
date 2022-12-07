@@ -12,7 +12,7 @@ type Result struct {
 	UserName            string               `json:"userName"`
 	QuestionAndAnswers  []*QuestionAndAnswer `json:"questionAndAnswers"`
 	TotalCorrectAnswers int                  `json:"totalCorrectAnswers"`
-	Status              int                  `json:"status"`
+	Status              string               `json:"status"`
 }
 
 type QuestionAndAnswer struct {
@@ -99,7 +99,7 @@ func (queAndAns QuestionAndAnswer) String() string {
 	return fmt.Sprintf("{%v %v %v %v }", queAndAns.Question, queAndAns.SelectedAnswer, queAndAns.CorrectAnswer, queAndAns.Result)
 }
 
-func CalculateStatus(currentTotalCorrectAnswer int, quizResultID int) int {
+func CalculateStatus(currentTotalCorrectAnswer int, quizResultID int) string {
 	quizResults := data.GetAllQuizResults()
 	worstQuizResultsAmount := 0.0
 
@@ -110,10 +110,12 @@ func CalculateStatus(currentTotalCorrectAnswer int, quizResultID int) int {
 	}
 
 	if worstQuizResultsAmount == 0 {
-		return 0
+		return "You scored the most low in all the quizzers"
 	}
 
-	return int(worstQuizResultsAmount / float64((len(*quizResults) - 1)) * 100)
+	value := int(worstQuizResultsAmount / float64((len(*quizResults) - 1)) * 100)
+
+	return fmt.Sprintf("You scored higher than %v%% of all quizzers", value)
 }
 
 type ErrorQuizResult struct {
