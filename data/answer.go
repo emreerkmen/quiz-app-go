@@ -15,17 +15,17 @@ type Answers []*Answer
 
 var answersList = Answers{
 	&Answer{ID: 1, quizResultID: 1,
-		questionID: 1, correctChoiceID: 1, selectedChoiceID: 1},
+		questionID: 1, correctChoiceID: 2, selectedChoiceID: 1},
 	&Answer{ID: 2, quizResultID: 1,
-		questionID: 2, correctChoiceID: 0, selectedChoiceID: 1},
+		questionID: 2, correctChoiceID: 3, selectedChoiceID: 1},
 	&Answer{ID: 3, quizResultID: 1,
-		questionID: 3, correctChoiceID: 0, selectedChoiceID: 1},
-	&Answer{ID: 4, quizResultID: 2,
-		questionID: 4, correctChoiceID: 1, selectedChoiceID: 1},
-	&Answer{ID: 5, quizResultID: 2,
-		questionID: 5, correctChoiceID: 1, selectedChoiceID: 2},
-	&Answer{ID: 6, quizResultID: 2,
-		questionID: 6, correctChoiceID: 1, selectedChoiceID: 1},
+		questionID: 3, correctChoiceID: 3, selectedChoiceID: 1},
+	&Answer{ID: 4, quizResultID: 1,
+		questionID: 4, correctChoiceID: 1, selectedChoiceID: 0},
+	&Answer{ID: 5, quizResultID: 1,
+		questionID: 5, correctChoiceID: 0, selectedChoiceID: 2},
+	&Answer{ID: 6, quizResultID: 1,
+		questionID: 6, correctChoiceID: 0, selectedChoiceID: 1},
 }
 
 func (answer Answer) String() string {

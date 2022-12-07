@@ -12,11 +12,11 @@ type quizzes []*quiz
 
 var quizzesList = quizzes{
 	&quiz{ID: 1,
-		Name:        "General Quiz",
-		Description: "This is a general quiz. You can find questions from any topic."},
+		Name:        "Animal Quiz",
+		Description: "This is a animal quiz. You can find questions about animals."},
 	&quiz{ID: 2,
-		Name:        "Game Quiz",
-		Description: "This quiz has questions that specific to video games."},
+		Name:        "Food Quiz",
+		Description: "This quiz has questions that specific to food. Pls make the quiz with a full stomach :)."},
 }
 
 func (quiz quiz) String() string {
