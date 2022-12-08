@@ -21,7 +21,7 @@ $cd cmd/quizcli
 $go run . --help
 ```
 
-# End Points ans Samples
+# End Points and Samples
 
 ## GET "/v1/quizzes"
 
@@ -238,7 +238,9 @@ response:
 
 ## Post "/v1/answer"
 
-Answer a quiz
+Answer a quiz.
+1. Each selectedChoice corresponds to the questions in the quiz in order
+2. "-1" means Empty choice
 
 request;
 ```bash
@@ -246,7 +248,7 @@ request;
     "quizID": 1,
     "userId": 1,
     "selectedChoices": [
-        -1,   // -1:Empty
+        -1,
         1,
         0,
         2,
