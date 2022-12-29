@@ -66,7 +66,9 @@ func main() {
 	go func() {
 		logger.Info("Starting server on port 9090")
 
-		if err := server.ListenAndServe(); err != nil {
+		err := server.ListenAndServe(); 
+		
+		if err != http.ErrServerClosed {
 			logger.Error("Error starting server", "error", err)
 			os.Exit(1)
 		}
@@ -81,7 +83,9 @@ func main() {
 	logger.Debug("Got signal:", sig)
 
 	// gracefully shutdown the server, waiting max 30 seconds for current operations to complete
-	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+
+	defer cancel()
 
 	if err := server.Shutdown(ctx); err != nil {
 		logger.Error("Server forced to shutdown:", err)
