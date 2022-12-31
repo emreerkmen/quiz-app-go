@@ -17,6 +17,6 @@ COPY pkg/ ./pkg
 WORKDIR /app/cmd/quizapi
 RUN go install 
 
-EXPOSE 8080
+EXPOSE 9090
 
 CMD [ "quizapi" ]
