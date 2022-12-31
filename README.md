@@ -8,10 +8,19 @@ It uses;
 # App Start
 
 1. Quiz Api
+
+Local Environment
 ```bash
 //in project root directory
 $cd cmd/quizapi
 $go run .
+```
+
+Docker
+```bash
+//in project root directory
+$docker build -t quiz-api:multistage -f Dockerfile.multistage .
+$docker run -p 9090:9090 quiz-api:multistage
 ```
 
 2. Quiz Cli
